@@ -58,6 +58,13 @@ def test_an_unknown_room_is_404(client):
     assert r.status_code == 404 and r.json()["type"] == "/errors/no-such-room"
 
 
+def test_the_201_documents_the_location_header(client):
+    created = client.get("/openapi.json").json()["paths"]["/checkouts"]["post"]["responses"]["201"]
+    assert created["headers"]["Location"]["schema"] == {"type": "string"}
+    assert "/properties/{property}/rooms/{no}" in created["headers"]["Location"]["description"]
+    assert created["content"]["application/json"]["schema"]["$ref"].endswith("/CheckoutOut")
+
+
 def test_an_arrival_before_the_checkout_is_422_naming_it(client, db):
     r = client.post("/checkouts", json={"room": "214", "at": iso(T0), "arrival_at": "2026-09-28T10:00:00Z"})
     assert r.status_code == 422 and r.json()["type"] == "/errors/validation"

@@ -58,3 +58,7 @@ class SelfInspection(DomainError):
 # (status, type, title) of the errors no domain class raises
 VALIDATION = (422, "/errors/validation", "The request body is not valid")
 FILTER = (400, "/errors/validation", "Invalid filter value")
+INTERNAL = (500, "/errors/internal", "Something went wrong")
+NOT_FOUND = (404, "/errors/not-found", "No such resource")
+METHOD_NOT_ALLOWED = (405, "/errors/method-not-allowed", "Method not allowed")
+HTTP = "/errors/http"                      # any other framework status; the title is the reason phrase
