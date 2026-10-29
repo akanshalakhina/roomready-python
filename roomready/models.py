@@ -1,5 +1,5 @@
-"""Rooms, stays, assignments and inspections. A room's state is derived from these rows,
-and there is deliberately no `state` column on rooms. Durations are stamped once and never
+"""Rooms, stays, assignments, inspections and readiness. A room's state is derived from these rows,
+and there is deliberately no `state` column on rooms. Durations and margins are stamped once and never
 recomputed."""
 from datetime import datetime
 
@@ -69,7 +69,7 @@ class Assignment(Base):
     started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     clean_minutes: Mapped[int | None] = mapped_column(Integer, nullable=True)    # stamped at finish, never recomputed
-    closed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)   # a failed inspection closes it
+    closed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)   # an inspection closes it
 
 
 class Inspection(Base):
@@ -83,3 +83,13 @@ class Inspection(Base):
     inspected_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
 
 
+class Readiness(Base):
+    """One row per stay whose room reached ready — when, against which arrival, and the margin, stamped once."""
+    __tablename__ = "room_readiness"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    property_id: Mapped[int] = mapped_column(ForeignKey("properties.id"))
+    room_id: Mapped[int] = mapped_column(ForeignKey("rooms.id"))
+    stay_id: Mapped[int] = mapped_column(ForeignKey("stays.id"), unique=True)
+    ready_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    arrival_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    margin_minutes: Mapped[int | None] = mapped_column(Integer, nullable=True)
