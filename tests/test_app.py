@@ -10,7 +10,8 @@ PKG = Path(__file__).resolve().parent.parent / "roomready"
 TAG = {"/properties/{property}/rooms": "rooms", "/properties/{property}/rooms/{no}": "rooms",
        "/properties/{property}/rooms/{no}/history": "rooms", "/properties/{property}/housekeepers": "rooms",
        "/checkouts": "checkouts", "/assignments": "assignments", "/assignments/{assignment_id}/start": "assignments",
-       "/assignments/{assignment_id}/finish": "assignments", "/inspections": "inspections"}
+       "/assignments/{assignment_id}/finish": "assignments", "/inspections": "inspections", "/settings": "settings",
+       "/healthz": "settings"}
 
 
 def test_docs_render_and_list_every_endpoint_with_a_summary_and_its_tag(client):
